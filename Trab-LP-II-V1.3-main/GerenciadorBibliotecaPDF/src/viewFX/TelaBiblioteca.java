@@ -30,6 +30,10 @@ public class TelaBiblioteca {
         Button btnBibtexColecao = new Button("BibTeX da Coleção");
         Button btnImportarBib = new Button("Importar BibTeX");
         Button btnExportarZip = new Button("Exportar Coleção ZIP");
+        Button btnVisualizarColecao = new Button("Visualizar Coleção");
+        Button btnEditarColecao = new Button("Editar Coleção");
+        Button btnRemoverColecao = new Button("Remover Coleção");
+        Button btnMoverEntrada = new Button("Mover Entrada");
         Button btnFechar = new Button("Fechar");
 
         btnAdicionar.setOnAction(e -> mostrarFormularioAdicionar(listaEntradas));
@@ -58,13 +62,17 @@ public class TelaBiblioteca {
         btnColecoes.setOnAction(e -> TelaColecoes.exibir(gerenciador));
         btnImportarBib.setOnAction(e -> TelaImportarBib.exibir(gerenciador, () -> atualizarLista(listaEntradas)));
         btnExportarZip.setOnAction(e -> TelaExportarZipColecao.exibir(gerenciador));
+        btnVisualizarColecao.setOnAction(e -> TelaVisualizarColecao.exibir(gerenciador));
+        btnEditarColecao.setOnAction(e -> TelaEditarColecao.exibir(gerenciador));
+        btnRemoverColecao.setOnAction(e -> TelaRemoverColecao.exibir(gerenciador));
+        btnMoverEntrada.setOnAction(e -> TelaMoverEntrada.exibir(gerenciador));
         btnFechar.setOnAction(e -> stage.close());
 
-        HBox botoes = new HBox(10, btnAdicionar, btnRemover, btnEditar, btnBibtex, btnBibtexColecao, btnColecoes, btnImportarBib, btnExportarZip, btnFechar);
+        HBox botoes = new HBox(10, btnAdicionar, btnRemover, btnEditar, btnBibtex, btnBibtexColecao, btnColecoes, btnVisualizarColecao, btnEditarColecao, btnRemoverColecao, btnMoverEntrada, btnImportarBib, btnExportarZip, btnFechar);
         VBox layout = new VBox(10, new Label("Entradas da Biblioteca:"), listaEntradas, botoes);
         layout.setPadding(new Insets(15));
 
-        stage.setScene(new Scene(layout, 950, 300));
+        stage.setScene(new Scene(layout, 1250, 300));
         stage.show();
     }
 
@@ -111,4 +119,5 @@ public class TelaBiblioteca {
         form.setScene(new Scene(layout, 300, 200));
         form.show();
     }
+}
 }
