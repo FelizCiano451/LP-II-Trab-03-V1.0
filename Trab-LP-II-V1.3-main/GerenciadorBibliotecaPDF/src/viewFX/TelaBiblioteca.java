@@ -38,6 +38,7 @@ public class TelaBiblioteca {
         Button btnEditarColecao = new Button("Editar Coleção");
         Button btnRemoverColecao = new Button("Remover Coleção");
         Button btnMoverEntrada = new Button("Mover Entrada");
+        Button btnListarPorColecao = new Button("Listar por Coleção");
         Button btnFechar = new Button("Fechar");
 
         btnAdicionar.setOnAction(e -> mostrarFormularioAdicionar(listaEntradas, campoBusca));
@@ -70,13 +71,14 @@ public class TelaBiblioteca {
         btnEditarColecao.setOnAction(e -> TelaEditarColecao.exibir(gerenciador));
         btnRemoverColecao.setOnAction(e -> TelaRemoverColecao.exibir(gerenciador));
         btnMoverEntrada.setOnAction(e -> TelaMoverEntrada.exibir(gerenciador));
+        btnListarPorColecao.setOnAction(e -> TelaListarEntradasPorColecao.exibir(gerenciador));
         btnFechar.setOnAction(e -> stage.close());
 
-        HBox botoes = new HBox(10, btnAdicionar, btnRemover, btnEditar, btnBibtex, btnBibtexColecao, btnColecoes, btnVisualizarColecao, btnEditarColecao, btnRemoverColecao, btnMoverEntrada, btnImportarBib, btnExportarZip, btnFechar);
+        HBox botoes = new HBox(10, btnAdicionar, btnRemover, btnEditar, btnBibtex, btnBibtexColecao, btnColecoes, btnVisualizarColecao, btnEditarColecao, btnRemoverColecao, btnMoverEntrada, btnListarPorColecao, btnImportarBib, btnExportarZip, btnFechar);
         VBox layout = new VBox(10, new Label("Entradas da Biblioteca:"), campoBusca, listaEntradas, botoes);
         layout.setPadding(new Insets(15));
 
-        stage.setScene(new Scene(layout, 1250, 350));
+        stage.setScene(new Scene(layout, 1300, 350));
         stage.show();
     }
 
