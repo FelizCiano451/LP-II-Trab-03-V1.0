@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import model.Entrada;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TelaBiblioteca {
 
@@ -20,7 +21,10 @@ public class TelaBiblioteca {
         stage.setTitle("Biblioteca de PDFs");
 
         ListView<String> listaEntradas = new ListView<>();
-        atualizarLista(listaEntradas);
+        TextField campoBusca = new TextField();
+        campoBusca.setPromptText("Buscar por título ou autor...");
+        campoBusca.textProperty().addListener((obs, oldVal, newVal) -> atualizarLista(listaEntradas, newVal));
+        atualizarLista(listaEntradas, "");
 
         Button btnAdicionar = new Button("Adicionar Entrada");
         Button btnRemover = new Button("Remover Selecionada");
@@ -36,19 +40,19 @@ public class TelaBiblioteca {
         Button btnMoverEntrada = new Button("Mover Entrada");
         Button btnFechar = new Button("Fechar");
 
-        btnAdicionar.setOnAction(e -> mostrarFormularioAdicionar(listaEntradas));
+        btnAdicionar.setOnAction(e -> mostrarFormularioAdicionar(listaEntradas, campoBusca));
         btnRemover.setOnAction(e -> {
             String selecionado = listaEntradas.getSelectionModel().getSelectedItem();
             if (selecionado != null) {
                 gerenciador.removerEntrada(selecionado);
-                atualizarLista(listaEntradas);
+                atualizarLista(listaEntradas, campoBusca.getText());
             }
         });
         btnEditar.setOnAction(e -> {
             String selecionado = listaEntradas.getSelectionModel().getSelectedItem();
             if (selecionado != null) {
                 Entrada entrada = gerenciador.getEntrada(selecionado);
-                TelaDetalhesEntrada.exibir(entrada, gerenciador, () -> atualizarLista(listaEntradas));
+                TelaDetalhesEntrada.exibir(entrada, gerenciador, () -> atualizarLista(listaEntradas, campoBusca.getText()));
             }
         });
         btnBibtex.setOnAction(e -> {
@@ -60,7 +64,7 @@ public class TelaBiblioteca {
         });
         btnBibtexColecao.setOnAction(e -> TelaBibTeXColecao.exibir(gerenciador));
         btnColecoes.setOnAction(e -> TelaColecoes.exibir(gerenciador));
-        btnImportarBib.setOnAction(e -> TelaImportarBib.exibir(gerenciador, () -> atualizarLista(listaEntradas)));
+        btnImportarBib.setOnAction(e -> TelaImportarBib.exibir(gerenciador, () -> atualizarLista(listaEntradas, campoBusca.getText())));
         btnExportarZip.setOnAction(e -> TelaExportarZipColecao.exibir(gerenciador));
         btnVisualizarColecao.setOnAction(e -> TelaVisualizarColecao.exibir(gerenciador));
         btnEditarColecao.setOnAction(e -> TelaEditarColecao.exibir(gerenciador));
@@ -69,21 +73,28 @@ public class TelaBiblioteca {
         btnFechar.setOnAction(e -> stage.close());
 
         HBox botoes = new HBox(10, btnAdicionar, btnRemover, btnEditar, btnBibtex, btnBibtexColecao, btnColecoes, btnVisualizarColecao, btnEditarColecao, btnRemoverColecao, btnMoverEntrada, btnImportarBib, btnExportarZip, btnFechar);
-        VBox layout = new VBox(10, new Label("Entradas da Biblioteca:"), listaEntradas, botoes);
+        VBox layout = new VBox(10, new Label("Entradas da Biblioteca:"), campoBusca, listaEntradas, botoes);
         layout.setPadding(new Insets(15));
 
-        stage.setScene(new Scene(layout, 1250, 300));
+        stage.setScene(new Scene(layout, 1250, 350));
         stage.show();
     }
 
-    private static void atualizarLista(ListView<String> listView) {
+    private static void atualizarLista(ListView<String> listView, String filtro) {
         listView.getItems().clear();
-        for (Entrada entrada : gerenciador.listarEntradas()) {
+        List<Entrada> entradas = gerenciador.listarEntradas();
+        if (filtro != null && !filtro.isBlank()) {
+            String termo = filtro.toLowerCase();
+            entradas = entradas.stream()
+                    .filter(e -> e.getTitulo().toLowerCase().contains(termo) || e.getAutor().toLowerCase().contains(termo))
+                    .collect(Collectors.toList());
+        }
+        for (Entrada entrada : entradas) {
             listView.getItems().add(entrada.getTitulo());
         }
     }
 
-    private static void mostrarFormularioAdicionar(ListView<String> listaEntradas) {
+    private static void mostrarFormularioAdicionar(ListView<String> listaEntradas, TextField campoBusca) {
         Stage form = new Stage();
         form.setTitle("Nova Entrada");
 
@@ -108,7 +119,7 @@ public class TelaBiblioteca {
                     case "NotaDeAula" -> gerenciador.adicionarEntrada(new model.NotaDeAula(titulo, autor));
                     case "Slide" -> gerenciador.adicionarEntrada(new model.Slide(titulo, autor));
                 }
-                atualizarLista(listaEntradas);
+                atualizarLista(listaEntradas, campoBusca.getText());
                 form.close();
             }
         });
@@ -119,5 +130,4 @@ public class TelaBiblioteca {
         form.setScene(new Scene(layout, 300, 200));
         form.show();
     }
-}
 }
