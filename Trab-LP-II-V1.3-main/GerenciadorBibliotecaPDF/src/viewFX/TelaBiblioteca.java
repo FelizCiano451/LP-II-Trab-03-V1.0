@@ -25,6 +25,7 @@ public class TelaBiblioteca {
         Button btnAdicionar = new Button("Adicionar Entrada");
         Button btnRemover = new Button("Remover Selecionada");
         Button btnEditar = new Button("Editar Selecionada");
+        Button btnColecoes = new Button("Gerenciar Coleções");
         Button btnFechar = new Button("Fechar");
 
         btnAdicionar.setOnAction(e -> mostrarFormularioAdicionar(listaEntradas));
@@ -43,8 +44,9 @@ public class TelaBiblioteca {
             }
         });
         btnFechar.setOnAction(e -> stage.close());
+        btnColecoes.setOnAction(e -> TelaColecoes.exibir(gerenciador));
 
-        HBox botoes = new HBox(10, btnAdicionar, btnRemover, btnEditar, btnFechar);
+        HBox botoes = new HBox(10, btnAdicionar, btnRemover, btnEditar, btnColecoes, btnFechar);
         VBox layout = new VBox(10, new Label("Entradas da Biblioteca:"), listaEntradas, botoes);
         layout.setPadding(new Insets(15));
 
