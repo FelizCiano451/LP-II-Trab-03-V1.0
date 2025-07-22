@@ -25,7 +25,10 @@ public class TelaBiblioteca {
         Button btnAdicionar = new Button("Adicionar Entrada");
         Button btnRemover = new Button("Remover Selecionada");
         Button btnEditar = new Button("Editar Selecionada");
+        Button btnBibtex = new Button("Exportar BibTeX");
         Button btnColecoes = new Button("Gerenciar Coleções");
+        Button btnImportarBib = new Button("Importar BibTeX");
+        Button btnExportarZip = new Button("Exportar Coleção ZIP");
         Button btnFechar = new Button("Fechar");
 
         btnAdicionar.setOnAction(e -> mostrarFormularioAdicionar(listaEntradas));
@@ -43,14 +46,23 @@ public class TelaBiblioteca {
                 TelaDetalhesEntrada.exibir(entrada, gerenciador, () -> atualizarLista(listaEntradas));
             }
         });
-        btnFechar.setOnAction(e -> stage.close());
+        btnBibtex.setOnAction(e -> {
+            String selecionado = listaEntradas.getSelectionModel().getSelectedItem();
+            if (selecionado != null) {
+                Entrada entrada = gerenciador.getEntrada(selecionado);
+                TelaBibTeXEntrada.exibir(entrada);
+            }
+        });
         btnColecoes.setOnAction(e -> TelaColecoes.exibir(gerenciador));
+        btnImportarBib.setOnAction(e -> TelaImportarBib.exibir(gerenciador, () -> atualizarLista(listaEntradas)));
+        btnExportarZip.setOnAction(e -> TelaExportarColecao.exibir(gerenciador));
+        btnFechar.setOnAction(e -> stage.close());
 
-        HBox botoes = new HBox(10, btnAdicionar, btnRemover, btnEditar, btnColecoes, btnFechar);
+        HBox botoes = new HBox(10, btnAdicionar, btnRemover, btnEditar, btnBibtex, btnColecoes, btnImportarBib, btnExportarZip, btnFechar);
         VBox layout = new VBox(10, new Label("Entradas da Biblioteca:"), listaEntradas, botoes);
         layout.setPadding(new Insets(15));
 
-        stage.setScene(new Scene(layout, 500, 300));
+        stage.setScene(new Scene(layout, 800, 300));
         stage.show();
     }
 
